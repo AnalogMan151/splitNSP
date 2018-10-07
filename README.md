@@ -16,4 +16,4 @@ This will not make a copy of the NSP and instead will split the original. This i
 
 Once the folder is made and the archive flag is set copy it to your SD card (sdmc:/tinfoil/nsp/ if using tinfoil) and install it like any other NSP. 
 
-If you have any issues feel free to post and I'll try my best to work it out. 
+If you have any issues feel free to submit an issue and I'll try my best to work it out. 
