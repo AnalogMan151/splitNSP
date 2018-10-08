@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Author: AnalogMan
-# Modified Date: 2018-10-07
+# Modified Date: 2018-10-08
 # Purpose: Splits Nintendo Switch NSP files into parts for installation on FAT32
 
 import os
@@ -14,7 +14,7 @@ chunkSize = 0x8000 # 32,768 bytes
 
 def splitQuick(filepath):
     fileSize = os.path.getsize(filepath)
-    info = shutil.disk_usage(os.path.dirname(filepath))
+    info = shutil.disk_usage(os.path.dirname(os.path.abspath(filepath)))
     if info.free < splitSize:
         print('Not enough temporary space. Needs 4GiB of free space\n')
         return
@@ -76,7 +76,7 @@ def splitQuick(filepath):
     
 def splitCopy(filepath):
     fileSize = os.path.getsize(filepath)
-    info = shutil.disk_usage(os.path.dirname(filepath))
+    info = shutil.disk_usage(os.path.dirname(os.path.abspath(filepath)))
     if info.free < fileSize*2:
         print('Not enough free space to run. Will require twice the space as the NSP file\n')
         return
