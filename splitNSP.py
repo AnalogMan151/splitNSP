@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
 # Author: AnalogMan
-# Modified Date: 2018-10-08
-# Purpose: Splits Nintendo Switch NSP files into parts for installation on FAT32
+# Modified Date: 2018-10-07
+# Purpose: Splits Nintendo Switch files into parts for installation on FAT32
 
 import os
 import argparse
 import shutil
+import os.path
 from datetime import datetime
 startTime = datetime.now()
 
 splitSize = 0xFFFF0000 # 4,294,901,760 bytes
 chunkSize = 0x8000 # 32,768 bytes
 
+from os.path import splitext
+def splitext_(path):
+    if len(path.split('.')) > 2:
+        return path.split('.')[0],'.'.join(path.split('.')[-2:])
+    return splitext(path)
+	
 def splitQuick(filepath):
     fileSize = os.path.getsize(filepath)
     info = shutil.disk_usage(os.path.dirname(os.path.abspath(filepath)))
@@ -21,13 +28,14 @@ def splitQuick(filepath):
     print('Calculating number of splits...\n')
     splitNum = int(fileSize/splitSize)
     if splitNum == 0:
-        print('This NSP is under 4GiB and does not need to be split.\n')
+        print('This file is under 4GiB and does not need to be split.\n')
         return
 
-    print('Splitting NSP into {0} parts...\n'.format(splitNum + 1))
+    print('Splitting file into {0} parts...\n'.format(splitNum + 1))
 
     # Create directory, delete if already exists
-    dir = filepath[:-4] + '_split.nsp'
+    file_name,extension = splitext_(filepath)
+    dir = filepath[:-4] + '_split.' + extension
     if os.path.exists(dir):
         shutil.rmtree(dir)
     os.makedirs(dir)
@@ -72,24 +80,25 @@ def splitQuick(filepath):
     # Print assurance statement for user
     print('Starting part 00\nPart 00 complete')
 
-    print('\nNSP successfully split!\n')
+    print('\nFile successfully split!\n')
     
 def splitCopy(filepath):
     fileSize = os.path.getsize(filepath)
     info = shutil.disk_usage(os.path.dirname(os.path.abspath(filepath)))
     if info.free < fileSize*2:
-        print('Not enough free space to run. Will require twice the space as the NSP file\n')
+        print('Not enough free space to run. Will require twice the space as the file\n')
         return
     print('Calculating number of splits...\n')
     splitNum = int(fileSize/splitSize)
     if splitNum == 0:
-        print('This NSP is under 4GiB and does not need to be split.\n')
+        print('This file is under 4GiB and does not need to be split.\n')
         return
     
-    print('Splitting NSP into {0} parts...\n'.format(splitNum + 1))
+    print('Splitting file into {0} parts...\n'.format(splitNum + 1))
 
     # Create directory, delete if already exists
-    dir = filepath[:-4] + '_split.nsp'
+    file_name,extension = splitext_(filepath)
+    dir = filepath[:-4] + '_split.' + extension
     if os.path.exists(dir):
         shutil.rmtree(dir)
     os.makedirs(dir)
@@ -113,14 +122,14 @@ def splitCopy(filepath):
                         splitFile.write(nspFile.read(chunkSize))
                         partSize += chunkSize
             print('Part {:02} complete'.format(i))
-    print('\nNSP successfully split!\n')
+    print('\nFile successfully split!\n')
 
 def main():
-    print('\n========== NSP Splitter ==========\n')
+    print('\n========== File Splitter ==========\n')
 
     # Arg parser for program options
-    parser = argparse.ArgumentParser(description='Split NSP files into FAT32 compatible sizes')
-    parser.add_argument('filepath', help='Path to NSP file')
+    parser = argparse.ArgumentParser(description='Split files into FAT32 compatible sizes')
+    parser.add_argument('filepath', help='Path to file')
     parser.add_argument('-q', '--quick', action='store_true', help='Splits file in-place without creating a copy. Only requires 4GiB free space to run')
 
     # Check passed arguments
@@ -130,10 +139,10 @@ def main():
 
     # Check if required files exist
     if os.path.isfile(filepath) == False:
-        print('NSP cannot be found\n')
+        print('File cannot be found\n')
         return 1
     
-    # Split NSP file
+    # Split file
     if args.quick:
         splitQuick(filepath)
     else:
