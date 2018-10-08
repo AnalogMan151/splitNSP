@@ -35,7 +35,7 @@ def splitQuick(filepath):
 
     # Create directory, delete if already exists
     file_name,extension = splitext_(filepath)
-    dir = filepath[:-4] + '_split.' + extension
+    dir = filepath[:-4] + '_split' + extension
     if os.path.exists(dir):
         shutil.rmtree(dir)
     os.makedirs(dir)
@@ -98,7 +98,7 @@ def splitCopy(filepath):
 
     # Create directory, delete if already exists
     file_name,extension = splitext_(filepath)
-    dir = filepath[:-4] + '_split.' + extension
+    dir = filepath[:-4] + '_split' + extension
     if os.path.exists(dir):
         shutil.rmtree(dir)
     os.makedirs(dir)
