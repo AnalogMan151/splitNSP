@@ -27,12 +27,7 @@ def splitQuick(filepath):
     print('Splitting NSP into {0} parts...\n'.format(splitNum + 1))
     
     # Create directory, delete if already exists
-    if output_dir == "":
-        dir = filepath[:-4] + '_split.nsp'
-    else:
-        if output_dir[-4:] != '.nsp':
-            output_dir+= ".nsp"
-        dir = output_dir
+    dir = filepath[:-4] + '_split.nsp'
     if os.path.exists(dir):
         shutil.rmtree(dir)
     os.makedirs(dir)
