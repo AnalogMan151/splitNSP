@@ -12,7 +12,7 @@ startTime = datetime.now()
 splitSize = 0xFFFF0000 # 4,294,901,760 bytes
 chunkSize = 0x8000 # 32,768 bytes
 
-def splitQuick(filepath, output_dir=""):
+def splitQuick(filepath):
     fileSize = os.path.getsize(filepath)
     info = shutil.disk_usage(os.path.dirname(os.path.abspath(filepath)))
     if info.free < splitSize:
@@ -131,8 +131,9 @@ def main():
     # Arg parser for program options
     parser = argparse.ArgumentParser(description='Split NSP files into FAT32 compatible sizes')
     parser.add_argument('filepath', help='Path to NSP file')
-    parser.add_argument('-q', '--quick', action='store_true', help='Splits file in-place without creating a copy. Only requires 4GiB free space to run')
-    parser.add_argument('-o', '--output-dir', type=str, default="",
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('-q', '--quick', action='store_true', help='Splits file in-place without creating a copy. Only requires 4GiB free space to run')
+    group.add_argument('-o', '--output-dir', type=str, default="",
                         help="Set alternative output dir")
 
     # Check passed arguments
@@ -147,7 +148,7 @@ def main():
     
     # Split NSP file
     if args.quick:
-        splitQuick(filepath, args.output_dir)
+        splitQuick(filepath)
     else:
         splitCopy(filepath, args.output_dir)
 
