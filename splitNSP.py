@@ -25,7 +25,7 @@ def splitQuick(filepath):
         return
 
     print('Splitting NSP into {0} parts...\n'.format(splitNum + 1))
-
+    
     # Create directory, delete if already exists
     dir = filepath[:-4] + '_split.nsp'
     if os.path.exists(dir):
@@ -74,7 +74,7 @@ def splitQuick(filepath):
 
     print('\nNSP successfully split!\n')
     
-def splitCopy(filepath):
+def splitCopy(filepath, output_dir=""):
     fileSize = os.path.getsize(filepath)
     info = shutil.disk_usage(os.path.dirname(os.path.abspath(filepath)))
     if info.free < fileSize*2:
@@ -89,7 +89,12 @@ def splitCopy(filepath):
     print('Splitting NSP into {0} parts...\n'.format(splitNum + 1))
 
     # Create directory, delete if already exists
-    dir = filepath[:-4] + '_split.nsp'
+    if output_dir == "":
+        dir = filepath[:-4] + '_split.nsp'
+    else:
+        if output_dir[-4:] != '.nsp':
+            output_dir+= ".nsp"
+        dir = output_dir
     if os.path.exists(dir):
         shutil.rmtree(dir)
     os.makedirs(dir)
@@ -121,7 +126,10 @@ def main():
     # Arg parser for program options
     parser = argparse.ArgumentParser(description='Split NSP files into FAT32 compatible sizes')
     parser.add_argument('filepath', help='Path to NSP file')
-    parser.add_argument('-q', '--quick', action='store_true', help='Splits file in-place without creating a copy. Only requires 4GiB free space to run')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('-q', '--quick', action='store_true', help='Splits file in-place without creating a copy. Only requires 4GiB free space to run')
+    group.add_argument('-o', '--output-dir', type=str, default="",
+                        help="Set alternative output dir")
 
     # Check passed arguments
     args = parser.parse_args()
@@ -137,7 +145,7 @@ def main():
     if args.quick:
         splitQuick(filepath)
     else:
-        splitCopy(filepath)
+        splitCopy(filepath, args.output_dir)
 
 if __name__ == "__main__":
     main()
