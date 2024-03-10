@@ -6,7 +6,7 @@ To run it you'll need Python3 installed. Once installed, call the script from Te
 
 ```python3 splitNSP.py filename.nsp```
 
-By default this will make a copy of the NSP and split it up into parts. Once created, you'll need to open the folder's properties and check the Archive flag. This is easily done on Windows, I'm still working on a way to do it for macOS since file flags aren't saved when copying to FAT32. 
+By default this will make a copy of the NSP and split it up into parts. Once created, you'll need to open the folder's properties and check the Archive flag. This is easily done on Windows, I'm still working on a way to do it for macOS since file flags aren't saved when copying to FAT32. You can also set the archive flag on a folder directly on the Switch using a homebrew such as NX-Shell.
 
 You can also activate quick mode with this command:
 
